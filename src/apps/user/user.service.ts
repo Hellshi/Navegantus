@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 
-import { UserRepository } from './repositories/user.repository';
+/* import { UserRepository } from './repositories/user.repository';
 import { RoleService } from '../role/role.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LocationPermissionService } from '../location-permission/location-permission.service';
@@ -20,12 +20,12 @@ import { EmailService } from '../email/email.service';
 import { EmailConfigService } from '../../configs/email/email.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ChurchService } from '../church/church.service';
+import { ChurchService } from '../church/church.service'; */
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly dataSource: DataSource,
+    /* private readonly dataSource: DataSource,
     @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
     @InjectRepository(RefreshToken)
@@ -36,9 +36,9 @@ export class UserService {
     private locationPermissionService: LocationPermissionService,
     private readonly emailService: EmailService,
     private readonly emailConfigService: EmailConfigService,
-    private readonly churchService: ChurchService,
+    private readonly churchService: ChurchService, */
   ) {}
-
+/* 
   async findOne(id: string) {
     return this.userRepository.findById(id);
   }
@@ -276,5 +276,5 @@ export class UserService {
 
     const userToSend = await this.userRepository.findById(updatedUser.id);
     this.amqpService.sendUserCreated(userToSend);
-  }
+  } */
 }

@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { SelectQueryBuilder } from 'typeorm';
 
 import { User } from '../entities/user.entity';
-import { UserStatus } from '../enums/user-status.enum';
 
 @Injectable()
 export class UserRepository extends BaseRepository<User> {
@@ -61,37 +60,5 @@ export class UserRepository extends BaseRepository<User> {
         'locationPermission.id',
         'locationPermissionState',
       ]);
-  }
-
-  async findOneByIdWithRoles(id: string) {
-    return this.createQueryBuilder('user')
-      .where('user.id = :id', { id })
-      .andWhere('user.status = :status', { status: UserStatus.ACTIVE })
-      .leftJoin('user.role', 'role')
-      .select([
-        'user.id',
-        'user.email',
-        'user.name',
-        'user.status',
-        'user.password',
-        'role',
-      ])
-      .getOne();
-  }
-
-  async findOneByEmailWithRoles(email: string) {
-    return this.createQueryBuilder('user')
-      .where('user.email = :email', { email })
-      .andWhere('user.status = :status', { status: UserStatus.ACTIVE })
-      .leftJoin('user.role', 'role')
-      .select([
-        'user.id',
-        'user.email',
-        'user.name',
-        'user.status',
-        'user.password',
-        'role',
-      ])
-      .getOne();
   }
 }

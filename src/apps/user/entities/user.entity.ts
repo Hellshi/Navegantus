@@ -15,6 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { BirthSext } from '../enums/birthSext.enum';
 import { Role } from 'src/apps/role/entities/role.entity';
+import { RefreshToken } from './refresh-token.entity';
 
 @Entity()
 export class User extends BaseEntity<User> {
@@ -50,9 +51,6 @@ export class User extends BaseEntity<User> {
   @JoinColumn()
   role: Relation<Role>;
 
-  /*@OneToMany(() => Code, (code) => code.user, { nullable: true, cascade: true })
-  codes?: Relation<Code[]>;
-
   @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
     cascade: true,
     nullable: true,
@@ -60,7 +58,7 @@ export class User extends BaseEntity<User> {
   })
   @JoinColumn()
   refreshToken: Relation<RefreshToken>;
- */
+
   @BeforeInsert()
   hashPassword(): void {
     if (this.password) this.password = bcrypt.hashSync(this.password, 10);

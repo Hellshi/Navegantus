@@ -7,14 +7,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-
-export class ChurchDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsUUID()
-  id: string;
-}
 
 export class CreateUserDto {
   @ApiProperty()
@@ -26,12 +18,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @ValidateNested()
-  @Type(() => ChurchDto)
-  church: ChurchDto;
 
   @ApiProperty()
   @IsNotEmpty()

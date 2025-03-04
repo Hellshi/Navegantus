@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
+/* import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RoleName } from '../../common/enums/roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,14 +23,14 @@ import { Request as RequestExpress } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
-import { CommonJwtAuth } from '../auth/decorators/common-auth.decorator';
+import { CommonJwtAuth } from '../auth/decorators/common-auth.decorator'; */
 
 @ApiTags('User')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get(':id')
+/*   @Get(':id')
   @CommonJwtAuth()
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
@@ -92,5 +92,5 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   updateStatus(@Param('id') id: string, @Body() dto: UpdateUserStatusDto) {
     return this.userService.updateUserStatus(id, dto.status);
-  }
+  } */
 }
