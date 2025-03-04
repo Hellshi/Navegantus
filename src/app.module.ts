@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseConfigModule } from './configs/database/database.module';
 import { PostgresModule } from './providers/postgres/postgres.module';
+import { AuthModule } from './apps/auth/auth.module';
 
 @Module({
   imports: [
@@ -12,7 +13,9 @@ import { PostgresModule } from './providers/postgres/postgres.module';
       envFilePath: '.env',
     }),
     PostgresModule,
-    DatabaseConfigModule],
+    DatabaseConfigModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
