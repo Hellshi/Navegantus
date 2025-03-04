@@ -14,6 +14,7 @@ import * as bcrypt from 'bcrypt';
 
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { BirthSext } from '../enums/birthSext.enum';
+import { Role } from 'src/apps/role/entities/role.entity';
 
 @Entity()
 export class User extends BaseEntity<User> {
@@ -41,12 +42,15 @@ export class User extends BaseEntity<User> {
   @Column({ unique: true, nullable: true })
   cre: string;
 
-  /* @ApiProperty({ type: () => Role })
+  @Column({ nullable: true, name: 'role_id' })
+  roleId?: string;
+
+  @ApiProperty({ type: () => Role })
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn()
   role: Relation<Role>;
 
-  @OneToMany(() => Code, (code) => code.user, { nullable: true, cascade: true })
+  /*@OneToMany(() => Code, (code) => code.user, { nullable: true, cascade: true })
   codes?: Relation<Code[]>;
 
   @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
