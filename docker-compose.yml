@@ -1,5 +1,5 @@
 services:
-  gateway-postgres:
+  navegantus-postgres:
     image: postgres:16
     ports:
       - ${DATABASE_PORT}:${DATABASE_PORT}
