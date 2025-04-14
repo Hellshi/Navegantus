@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import { UserRepository } from './repositories/user.repository';
 
 /* import { UserRepository } from './repositories/user.repository';
 import { RoleService } from '../role/role.service';
@@ -25,10 +26,10 @@ import { ChurchService } from '../church/church.service'; */
 @Injectable()
 export class UserService {
   constructor(
-    /* private readonly dataSource: DataSource,
+     private readonly dataSource: DataSource,
     @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
-    @InjectRepository(RefreshToken)
+    /*@InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
     private readonly roleService: RoleService,
     private readonly amqpService: AmqpService,
@@ -38,6 +39,21 @@ export class UserService {
     private readonly emailConfigService: EmailConfigService,
     private readonly churchService: ChurchService, */
   ) {}
+  async verifyRefreshToken(id: string, refreshToken: string) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: {
+        refreshToken: true,
+        role: true,
+      },
+    });
+
+    if (!user || !user.refreshToken.compareToken(refreshToken)) {
+      throw new UnauthorizedException('Invalid refresh token or credentials');
+    }
+
+    return user;
+  }
 /* 
   async findOne(id: string) {
     return this.userRepository.findById(id);
@@ -228,22 +244,6 @@ export class UserService {
     });
 
     return this.refreshTokenRepository.save(password);
-  }
-
-  async verifyRefreshToken(id: string, refreshToken: string) {
-    const user = await this.userRepository.findOne({
-      where: { id, status: UserStatus.ACTIVE },
-      relations: {
-        refreshToken: true,
-        role: true,
-      },
-    });
-
-    if (!user || !user.refreshToken.compareToken(refreshToken)) {
-      throw new UnauthorizedException('Invalid refresh token or credentials');
-    }
-
-    return user;
   }
 
   async updateProfile(id: string, dto: UpdateProfileDto) {
