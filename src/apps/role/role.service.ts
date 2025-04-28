@@ -15,7 +15,7 @@ export class RoleService {
     return this.roleRepository.find();
   }
 
-  async findOneOrFail(id: string) {
+  async findOneOrFail(id: RoleName) {
     return this.roleRepository.findOneByCriteriaOrFail({
       id,
     });

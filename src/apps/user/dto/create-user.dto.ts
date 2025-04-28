@@ -1,31 +1,55 @@
-import {
-  IsArray,
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
+import { BirthSext } from '../enums/birthSext.enum';
+import { RoleName } from 'src/apps/role/enum/roles.enum';
 
 export class CreateUserDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ example: 'user@example.com' })
   @IsEmail()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'John Doe' })
+  @IsString()
   @IsNotEmpty()
-  @IsUUID('4')
-  role: string;
+  name: string;
+
+  @ApiProperty({ example: 'strongpassword123', writeOnly: true })
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty({ enum: BirthSext })
+  @IsEnum(BirthSext)
+  birthSex: BirthSext;
+
+  @ApiProperty({ example: '11999999999' })
+  @IsString()
+  @Matches(/^\d{10,11}$/, { message: 'phone must be a valid phone number' })
+  phone: string;
+
+  @ApiProperty({ example: '12345678901' })
+  @IsString()
+  @Matches(/^\d{11}$/, { message: 'cpf must be a valid CPF number' })
+  cpf: string;
+
+  @ApiProperty({ example: '123456', required: false })
+  @IsOptional()
+  @IsString()
+  crm?: string;
+
+  @ApiProperty({ example: '654321', required: false })
+  @IsOptional()
+  @IsString()
+  cre?: string;
 
   @ApiProperty()
-  @IsArray()
-  @IsUUID('4', { each: true })
-  statesId: string[];
+  @IsEnum(RoleName)
+  role?: RoleName;
 }

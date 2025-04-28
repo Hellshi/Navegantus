@@ -8,17 +8,15 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 
   const config = new DocumentBuilder()
-  .setTitle('Conciliação Gateway')
-  .setDescription('Conciliação Gateway')
+  .setTitle('Navegantus Gateway')
+  .setDescription('Navegantus Doc')
   .setVersion('0.1')
   .addBearerAuth(undefined, 'defaultBearerAuth')
   .addBearerAuth(undefined, 'refreshBearerAuth')
-  .addBearerAuth(undefined, 'pdvRefreshBearerAuth')
   .addBasicAuth()
   .build();
 
   const document = SwaggerModule.createDocument(app, config);
-
   SwaggerModule.setup('api', app, document);
 }
 const logger = new Logger()

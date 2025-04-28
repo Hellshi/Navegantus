@@ -1,11 +1,11 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { UserRepository } from './repositories/user.repository';
+import { CreateUserDto } from './dto/create-user.dto';
+import { RoleService } from '../role/role.service';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 /* import { UserRepository } from './repositories/user.repository';
 import { RoleService } from '../role/role.service';
@@ -26,18 +26,16 @@ import { ChurchService } from '../church/church.service'; */
 @Injectable()
 export class UserService {
   constructor(
-     private readonly dataSource: DataSource,
+    private readonly dataSource: DataSource,
     @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
+    private readonly roleService: RoleService,
     /*@InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
-    private readonly roleService: RoleService,
-    private readonly amqpService: AmqpService,
     private codeService: CodeService,
-    private locationPermissionService: LocationPermissionService,
     private readonly emailService: EmailService,
     private readonly emailConfigService: EmailConfigService,
-    private readonly churchService: ChurchService, */
+    */
   ) {}
   async verifyRefreshToken(id: string, refreshToken: string) {
     const user = await this.userRepository.findOne({
@@ -54,12 +52,12 @@ export class UserService {
 
     return user;
   }
-/* 
+  
   async findOne(id: string) {
     return this.userRepository.findById(id);
   }
 
-  async createUser(dto: CreateUserDto, adminName: string) {
+  async createUser(dto: CreateUserDto) {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -70,112 +68,10 @@ export class UserService {
         role: { id: dto.role },
       });
 
-      const role = await this.roleService.findOneOrFail(dto.role);
-
-      if (role.name !== RoleName.MASTER) {
-        userToSave.locationPermission =
-          await this.locationPermissionService.create(
-            dto.statesId,
-            queryRunner,
-          );
-      }
-
-      const savedUser = await queryRunner.manager.save(userToSave);
-      const code = await this.codeService.createCode({
-        user: savedUser,
-        queryRunner,
-        expiresAt: {
-          duration: 24,
-          durationInput: 'hours',
-        },
-      });
+      const user = await queryRunner.manager.save(userToSave);
       await queryRunner.commitTransaction();
-      const user = await this.userRepository.findById(savedUser.id);
-      this.amqpService.sendUserCreated(user);
-
-      await this.emailService.sendCreatePasswordEmail({
-        to: dto.email,
-        name: dto.name,
-        url: `${this.emailConfigService.createPasswordUrl}/${code}`,
-        admin: adminName,
-        role: role.name,
-      });
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  async updateUser(userId: string, dto: UpdateUserDto) {
-    const user = await this.userRepository.findOneByCriteriaOrFail({
-      id: userId,
-    });
-
-    const currentLocationPermissions =
-      await this.locationPermissionService.findByUserId(userId);
-
-    const newChurch = await this.churchService.findOneOrFail(dto.church?.id);
-
-    const newRole = await this.roleService.findOneOrFail(dto.role);
-
-    if (newRole.name === RoleName.MASTER) {
-      user.locationPermission = [];
-    }
-
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      user.locationPermission = await this.locationPermissionService.create(
-        dto.statesId,
-        queryRunner,
-      );
-
-      user.name = dto.name;
-      user.role = newRole;
-      user.church = newChurch;
-
-      await this.locationPermissionService.remove(
-        currentLocationPermissions,
-        queryRunner,
-      );
-
-      const updatedUser = await queryRunner.manager.save(user);
-
-      await queryRunner.commitTransaction();
-
-      const userToSend = await this.userRepository.findById(updatedUser.id);
-      this.amqpService.sendUserCreated(userToSend);
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  async createPassword(code: string, password: string) {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      const { userId } = await this.codeService.checkCode(code);
-      const user = await this.userRepository.findOneOrFail({
-        where: { id: userId },
-      });
-      user.password = password;
-      user.status = UserStatus.ACTIVE;
-
-      await queryRunner.manager.update(User, user.id, user);
-      await queryRunner.commitTransaction();
-
-      const userToSend = await this.userRepository.findById(userId);
-      this.amqpService.sendUserCreated(userToSend);
+      return user;
+       
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -209,6 +105,48 @@ export class UserService {
       user.password = password;
       await queryRunner.manager.save(user);
       await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+
+  async updateProfile(id: string, dto: UpdateProfileDto) {
+      const user = await this.userRepository.findOneOrFail({
+        where: { id },
+      });
+
+      const updatedUser = await this.userRepository.save({
+        ...user,
+        ...dto,
+      });
+
+      return this.userRepository.findById(updatedUser.id);
+  }
+
+
+/* 
+
+
+  async createPassword(code: string, password: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const { userId } = await this.codeService.checkCode(code);
+      const user = await this.userRepository.findOneOrFail({
+        where: { id: userId },
+      });
+      user.password = password;
+      user.status = UserStatus.ACTIVE;
+
+      await queryRunner.manager.update(User, user.id, user);
+      await queryRunner.commitTransaction();
+
       const userToSend = await this.userRepository.findById(userId);
       this.amqpService.sendUserCreated(userToSend);
     } catch (error) {
@@ -218,6 +156,8 @@ export class UserService {
       await queryRunner.release();
     }
   }
+
+  
 
   async updateLastAccess(id: string) {
     const user = await this.userRepository.update(id, {
@@ -244,22 +184,6 @@ export class UserService {
     });
 
     return this.refreshTokenRepository.save(password);
-  }
-
-  async updateProfile(id: string, dto: UpdateProfileDto) {
-    try {
-      const user = await this.userRepository.findOneOrFail({
-        where: { id },
-      });
-
-      const updatedUser = await this.userRepository.save({
-        ...user,
-        ...dto,
-      });
-
-      const userToSend = await this.userRepository.findById(updatedUser.id);
-      this.amqpService.sendUserCreated(userToSend);
-    } catch (error) {}
   }
 
   async verifyCode(code: string) {

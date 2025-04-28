@@ -31,10 +31,10 @@ export class User extends BaseEntity<User> {
   @Column({ name: 'birth_sex', enum: BirthSext })
   birthSex: BirthSext;
 
-  @Column({ unique: true})
+  @Column({ unique: true })
   phone: string;
 
-  @Column({ unique: true})
+  @Column({ unique: true })
   cpf: string;
 
   @Column({ unique: true, nullable: true })

@@ -1,7 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseRepository } from '../../../common/repository/base-repository';
 import { Injectable } from '@nestjs/common';
-import { SelectQueryBuilder } from 'typeorm';
 
 import { User } from '../entities/user.entity';
 
@@ -49,5 +48,4 @@ export class UserRepository extends BaseRepository<User> {
       ])
       .getOne();
   }
-
 }

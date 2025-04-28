@@ -16,18 +16,19 @@ import { UserModule } from '../user/user.module';
 import { RoleModule } from '../role/role.module';
 import { PassportModule } from '@nestjs/passport';
 
-
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({
-    global: true,
-    secret: config().secret,
-    signOptions: { expiresIn: config().expiration },
-  }),
-  AuthConfigModule,
-  UserModule,
-  RoleModule,
-  PassportModule,
-],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    JwtModule.register({
+      global: true,
+      secret: config().secret,
+      signOptions: { expiresIn: config().expiration },
+    }),
+    AuthConfigModule,
+    UserModule,
+    RoleModule,
+    PassportModule,
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

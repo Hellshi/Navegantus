@@ -3,7 +3,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { ValidateLogin } from './decorators/validate-login.decorator';
 import { BasicAuth } from './decorators/basic-auth.decorator';
 import { LoginDto } from './dto/login.dto';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { AuthService } from './auth.service';
 
 /* Dev's Note: Para a POC não teremos feature de forgot password, as senhas terão de ser resetadas manualmente
