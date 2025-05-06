@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -11,10 +11,7 @@ import { RoleRepository } from '../role/repositories/role.repository';
 import { RefreshToken } from './entities/refresh-token.entity';
 
 @Module({
-  imports: [
-    RoleModule,
-    TypeOrmModule.forFeature([User, Role, RefreshToken]),
-  ],
+  imports: [RoleModule, TypeOrmModule.forFeature([User, Role, RefreshToken])],
   controllers: [UserController],
   providers: [UserService, UserRepository, RoleRepository],
   exports: [UserService],

@@ -11,22 +11,27 @@ export class HospitalService {
     private readonly hospitalRepository: HospitalRepository,
   ) {}
   create(createHospitalDto: CreateHospitalDto) {
-    return 'This action adds a new hospital';
+    return this.hospitalRepository.create(createHospitalDto);
   }
 
-  findAll() {
+// Para a poc não haverá listagem de hospitais, porque ainda não haverá painel de admin para os masters
+/*   findAll() {
     return `This action returns all hospital`;
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} hospital`;
+*/
+  findOne(id: string) {
+    return this.hospitalRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: number, updateHospitalDto: UpdateHospitalDto) {
-    return `This action updates a #${id} hospital`;
+  update(id: string, updateHospitalDto: UpdateHospitalDto) {
+    return this.hospitalRepository.update(id, updateHospitalDto);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} hospital`;
   }
 }

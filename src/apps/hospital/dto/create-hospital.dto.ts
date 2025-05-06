@@ -3,6 +3,11 @@ import { IsNotEmpty, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateHospitalAddressDto } from './create-hospital-address.dto';
 
+class HospitalDirectorDto {
+  @ApiProperty()
+  @IsUUID()
+  id: string;
+}
 export class CreateHospitalDto {
   @ApiProperty({ example: '12345678000199' })
   @IsString()
@@ -14,9 +19,10 @@ export class CreateHospitalDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ example: 'uuid-do-diretor' })
-  @IsUUID()
-  director: string;
+  @ApiProperty({ type: () => HospitalDirectorDto })
+  @ValidateNested()
+  @Type(() => HospitalDirectorDto)
+  director: HospitalDirectorDto;
 
   @ApiProperty({ type: () => CreateHospitalAddressDto })
   @ValidateNested()

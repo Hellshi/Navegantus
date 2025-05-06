@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { HospitalService } from './hospital.service';
 import { CreateHospitalDto } from './dto/create-hospital.dto';
 import { UpdateHospitalDto } from './dto/update-hospital.dto';
@@ -15,23 +23,26 @@ export class HospitalController {
     return this.hospitalService.create(createHospitalDto);
   }
 
-  @Get()
+  /*   @Get()
   findAll() {
     return this.hospitalService.findAll();
-  }
+  } */
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.hospitalService.findOne(+id);
+    return this.hospitalService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHospitalDto: UpdateHospitalDto) {
-    return this.hospitalService.update(+id, updateHospitalDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateHospitalDto: UpdateHospitalDto,
+  ) {
+    return this.hospitalService.update(id, updateHospitalDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.hospitalService.remove(+id);
+    return this.hospitalService.remove(id);
   }
 }

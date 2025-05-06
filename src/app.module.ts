@@ -8,7 +8,7 @@ import { AuthConfigModule } from './configs/auth/auth.module';
 import { RoleModule } from './apps/role/role.module';
 import { CommonRolesGuard } from './apps/auth/guards/common-roles-guard.service';
 import { RolesGuard } from './apps/auth/guards/roles-guard.service';
-import { HospitalModule } from './hospital/hospital.module';
+import { HospitalModule } from './apps/hospital/hospital.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { HospitalModule } from './hospital/hospital.module';
     UserModule,
     AuthConfigModule,
     RoleModule,
-    HospitalModule
+    HospitalModule,
   ],
   controllers: [],
   providers: [

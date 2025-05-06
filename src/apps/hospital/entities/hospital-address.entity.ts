@@ -1,26 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
 import { StateEnum } from '../enum/state';
+import { Hospital } from './hospital.entity';
 
 @Entity('hospital_address')
 export class HospitalAddress {
-  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty()
   @Column({ type: 'varchar' })
   cep: string;
 
-  @ApiProperty()
   @Column({ type: 'varchar' })
   city: string;
 
-  @ApiProperty()
   @Column({ type: 'enum', enum: StateEnum })
   state: StateEnum;
 
-  @ApiProperty()
   @Column({ type: 'varchar' })
   neighborhood: string;
+
+  @OneToOne(() => Hospital, (hospital) => hospital.address)
+  hospital: Hospital;
 }

@@ -1,7 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { HospitalAddress } from './hospital-address.entity';
 import { HospitalEmployee } from './hospital-employee.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from 'src/apps/user/entities/user.entity';
 
 @Entity('hospitals')
 export class Hospital {
@@ -19,16 +27,23 @@ export class Hospital {
 
   @ApiProperty()
   @Column({ type: 'uuid' })
-  director: string;
+  directorId: string;
 
   @ApiProperty()
   @Column({ type: 'uuid' })
-  address: string;
+  addressId: string;
 
-  @OneToOne(() => HospitalAddress)
+  @OneToOne(() => HospitalAddress, (address) => address.hospital)
   @JoinColumn({ name: 'address' })
-  hospitalAddress: HospitalAddress;
+  address: HospitalAddress;
 
-  @OneToMany(() => HospitalEmployee, (hospitalEmployee) => hospitalEmployee.hospital)
+  @OneToMany(
+    () => HospitalEmployee,
+    (hospitalEmployee) => hospitalEmployee.hospital,
+  )
   employees: HospitalEmployee[];
+
+  @OneToOne(() => User)
+  @JoinColumn({ name: 'directorId' })
+  director: User;
 }
