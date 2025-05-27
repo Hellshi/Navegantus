@@ -13,9 +13,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 
 import { BaseEntity } from '../../../common/entities/base.entity';
-import { BirthSext } from '../enums/birthSext.enum';
 import { Role } from 'src/apps/role/entities/role.entity';
 import { RefreshToken } from './refresh-token.entity';
+import { BirthSex } from '../enums/birthSext.enum';
 
 @Entity()
 export class User extends BaseEntity<User> {
@@ -28,8 +28,8 @@ export class User extends BaseEntity<User> {
   @Column({ nullable: false, select: false })
   password: string;
 
-  @Column({ name: 'birth_sex', enum: BirthSext })
-  birthSex: BirthSext;
+  @Column({ name: 'birth_sex', enum: BirthSex })
+  birthSex: BirthSex;
 
   @Column({ unique: true })
   phone: string;

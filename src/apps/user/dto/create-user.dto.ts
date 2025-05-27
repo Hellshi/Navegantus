@@ -7,8 +7,8 @@ import {
   IsString,
   Matches,
 } from 'class-validator';
-import { BirthSext } from '../enums/birthSext.enum';
 import { RoleName } from 'src/apps/role/enum/roles.enum';
+import { BirthSex } from '../enums/birthSext.enum';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'user@example.com' })
@@ -25,9 +25,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({ enum: BirthSext })
-  @IsEnum(BirthSext)
-  birthSex: BirthSext;
+  @ApiProperty({ enum: BirthSex })
+  @IsEnum(BirthSex)
+  birthSex: BirthSex;
 
   @ApiProperty({ example: '11999999999' })
   @IsString()

@@ -1,4 +1,4 @@
-export enum BirthSext {
+export enum BirthSex {
     MALE = "Masculino",
     FEMALE = "Femenino"
 }
