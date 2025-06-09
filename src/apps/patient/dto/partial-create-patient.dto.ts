@@ -1,31 +1,25 @@
-import {
-  IsString,
-  IsEmail,
-  IsPhoneNumber,
-  IsDate,
-  IsOptional,
-  IsIn,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsDateString, IsUUID, IsEnum } from 'class-validator';
+import { BirthSex } from 'src/apps/user/enums/birthSext.enum';
 
-export class CreatePatientDto {
+export class CreatePatientPartialDto {
   @IsString()
   name: string;
 
-  @IsEmail()
-  email: string;
+  @IsDateString()
+  birthDate: string;
 
-  @IsPhoneNumber('BR')
-  phone: string;
-
-  @IsIn(['male', 'female', 'other'])
-  birthSex: string;
-
-  @Type(() => Date)
-  @IsDate()
-  birthDate: Date;
-
-  @IsOptional()
   @IsString()
-  healthInsurance?: string;
+  mothersName: string;
+
+  @IsString()
+  rg: string;
+
+  @IsString()
+  cpf: string;
+
+  @IsEnum(BirthSex)
+  birthSex: BirthSex;
+
+  @IsUUID()
+  addressId: string;
 }

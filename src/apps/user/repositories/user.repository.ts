@@ -23,14 +23,7 @@ export class UserRepository extends BaseRepository<User> {
     return this.createQueryBuilder('user')
       .where('user.email = :email', { email })
       .leftJoin('user.role', 'role')
-      .select([
-        'user.id',
-        'user.email',
-        'user.name',
-        'user.status',
-        'user.password',
-        'role',
-      ])
+      .select(['user.id', 'user.email', 'user.name', 'user.password', 'role'])
       .getOne();
   }
 

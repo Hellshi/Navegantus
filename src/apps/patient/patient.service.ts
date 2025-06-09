@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { CreatePatientPartialDto } from './dto/partial-create-patient.dto';
 
 @Injectable()
 export class PatientService {
   create(createPatientDto: CreatePatientDto) {
+    return 'This action adds a new patient';
+  }
+
+  createPartialPatient(createPatientDto: CreatePatientPartialDto) {
     return 'This action adds a new patient';
   }
 

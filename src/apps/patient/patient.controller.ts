@@ -2,13 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RoleName } from '../role/enum/roles.enum';
+import { CreatePatientPartialDto } from './dto/partial-create-patient.dto';
 
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
+  @Roles(RoleName.HEALTH_STAFF, RoleName.STAFF)
+  create(@Body() createPatientDto: CreatePatientPartialDto) {
     return this.patientService.create(createPatientDto);
   }
 
