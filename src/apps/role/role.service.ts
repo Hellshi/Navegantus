@@ -16,8 +16,11 @@ export class RoleService {
   }
 
   async findOneOrFail(id: RoleName) {
+    if (id === RoleName.MASTER) {
+      throw new Error('Master users cannot be created');
+    }
     return this.roleRepository.findOneByCriteriaOrFail({
-      id,
+      name: id,
     });
   }
 

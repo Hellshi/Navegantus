@@ -28,7 +28,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @Roles(RoleName.DIRECTOR)
+  @Roles(RoleName.DIRECTOR, RoleName.MASTER)
   @CommonJwtAuth()
   create(@Body() dto: CreateUserDto) {
     //TODO: por enquanto usuários serão criados com senha

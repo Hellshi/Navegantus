@@ -63,9 +63,10 @@ export class UserService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      const role = await this.roleService.findOneOrFail(dto.role);
       const userToSave = this.userRepository.create({
         ...dto,
-        role: { id: dto.role },
+        role,
       });
 
       const user = await queryRunner.manager.save(userToSave);
