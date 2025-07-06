@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Body, Controller, Get, Param, Patch, Post, Request } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { RoleName } from '../role/enum/roles.enum';
 import { CommonJwtAuth } from '../auth/decorators/common-auth.decorator';
@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Request as RequestExpress } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 /* import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RoleName } from '../../common/enums/roles.enum';
@@ -35,8 +36,18 @@ export class UserController {
     return this.userService.createUser(dto);
   }
 
+  @Get()
+  @CommonJwtAuth()
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  find(@Query() pagination: PaginationDto, @Request() req: RequestExpress) {
+    const { user } = req;
+    return this.userService.findAllPaginated(pagination, user.role as RoleName);
+  }
+
   @Get(':id')
   @CommonJwtAuth()
+  @Roles(RoleName.DIRECTOR, RoleName.STAFF)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }

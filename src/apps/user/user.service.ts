@@ -6,6 +6,8 @@ import { UserRepository } from './repositories/user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RoleService } from '../role/role.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { RoleName } from '../role/enum/roles.enum';
 
 /* import { UserRepository } from './repositories/user.repository';
 import { RoleService } from '../role/role.service';
@@ -126,6 +128,10 @@ export class UserService {
       });
 
       return this.userRepository.findById(updatedUser.id);
+  }
+
+  async findAllPaginated(pagination: PaginationDto, role: RoleName) {
+    return this.userRepository.findAllUsersPaginated(pagination, role);
   }
 
 
