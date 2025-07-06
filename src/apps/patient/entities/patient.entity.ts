@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { BirthSex } from 'src/apps/user/enums/birthSext.enum';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Entity, Column, JoinColumn, OneToOne, OneToMany } from 'typeorm';
@@ -11,14 +12,14 @@ export enum HealthInsurance {
 }
 
 @Entity('patients')
-export class Patient extends BaseEntity<Patient> {
+export class PatientEntity extends BaseEntity<PatientEntity> {
   @Column()
   name: string;
 
   @Column({ nullable: true })
   socialName: string;
 
-  @Column()
+  @Column({ name: 'birth_date' })
   birthDate: string;
 
   @Column()
@@ -46,8 +47,8 @@ export class Patient extends BaseEntity<Patient> {
   })
   birthSex: BirthSex;
 
-  @Column({ type: 'uuid' })
-  addressId: string;
+  @Column({ type: 'uuid', nullable: true })
+  addressId?: string;
 
   @OneToOne(() => PatientAddress, (address) => address.patient)
   @JoinColumn({ name: 'address' })

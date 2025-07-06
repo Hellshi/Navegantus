@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -17,7 +25,7 @@ export class PatientController {
   }
 
   @Post('partial-register')
-  partialRegister(@Body() createPatientDto: CreatePatientDto) {
+  partialRegister(@Body() createPatientDto: CreatePatientPartialDto) {
     return this.patientService.create(createPatientDto);
   }
 

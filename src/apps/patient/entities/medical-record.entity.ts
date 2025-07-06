@@ -6,7 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Patient } from './patient.entity';
+import { PatientEntity } from './patient.entity';
 
 //Lembre que a ideia disso é que sejam upload de documentos e etc
 @Entity('medical_records')
@@ -56,7 +56,7 @@ export class MedicalRecord {
   @JoinColumn({ name: 'navegant' })
   navegant: User;
 
-  @ManyToOne(() => Patient)
+  @ManyToOne(() => PatientEntity)
   @JoinColumn({ name: 'patient_id' })
-  patient: Patient;
+  patient: PatientEntity;
 }

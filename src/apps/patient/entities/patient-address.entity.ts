@@ -1,6 +1,6 @@
 import { StateEnum } from 'src/apps/hospital/enum/state';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
-import { Patient } from './patient.entity';
+import { PatientEntity } from './patient.entity';
 
 @Entity('patient_address')
 export class PatientAddress {
@@ -19,6 +19,6 @@ export class PatientAddress {
   @Column({ type: 'varchar' })
   neighborhood: string;
 
-  @OneToOne(() => Patient, (patient) => patient.address)
-  patient: Patient;
+  @OneToOne(() => PatientEntity, (patient) => patient.address)
+  patient: PatientEntity;
 }
