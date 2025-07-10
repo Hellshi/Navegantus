@@ -4,13 +4,13 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 import { Entity, Column, JoinColumn, OneToOne, OneToMany } from 'typeorm';
 import { PatientAddress } from './patient-address.entity';
 import { MedicalRecord } from './medical-record.entity';
+import { PathologicalReport } from './pathological-report.entity';
 
 export enum HealthInsurance {
   Public = 'Public',
   Private = 'Private',
   None = 'None',
 }
-
 @Entity('patients')
 export class PatientEntity extends BaseEntity<PatientEntity> {
   @Column()
@@ -56,6 +56,9 @@ export class PatientEntity extends BaseEntity<PatientEntity> {
 
   @OneToMany(() => MedicalRecord, (record) => record.patient)
   medicalRecords: MedicalRecord[];
+
+  @OneToMany(() => PathologicalReport, (report) => report.patient)
+  pathologicalReports: PathologicalReport[];
 
   @Column({ nullable: true })
   email: string;

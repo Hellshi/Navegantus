@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
+import { CreatePathologicalReportDto } from './dto/update-patient.dto';
 import { CreatePatientPartialDto } from './dto/partial-create-patient.dto';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PatientRepository } from './repositories/patient.repository';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PathologicalReport } from './entities/pathological-report.entity';
+import { PathologicalIhcMarker } from './entities/pathological-ihc-marker.entity';
+import { PathologicalRecommendation } from './entities/pathological-recommendation.entity';
 
 @Injectable()
 export class PatientService {
@@ -12,6 +15,8 @@ export class PatientService {
     private readonly dataSource: DataSource,
     @InjectRepository(PatientRepository)
     private readonly patientRepository: PatientRepository,
+    @InjectRepository(PathologicalReport)
+    private readonly pathologicalReportRepository: Repository<PathologicalReport>,
   ) {}
   async create(dto: CreatePatientPartialDto) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -38,20 +43,32 @@ export class PatientService {
     }
   }
 
-  createPartialPatient(createPatientDto: CreatePatientPartialDto) {
-    return 'This action adds a new patient';
+  findAllPaginated(pagination: PaginationDto) {
+    return this.patientRepository.findAllPatientsPaginated(pagination);
   }
 
-  findAll() {
-    return `This action returns all patient`;
+  findOne(id: string) {
+    return this.patientRepository.findOneOrFail({ where: { id } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
-  }
+  async update(id: string, updatePatientDto: CreatePathologicalReportDto) {
+    const patient = await this.patientRepository.findOneOrFail({
+      where: { id },
+    });
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
+    const savedPathologicalReport = this.pathologicalReportRepository.create({
+      diagnosisGrade: updatePatientDto.diagnosisGrade,
+      diagnosisType: updatePatientDto.diagnosisType,
+      macroscopy: updatePatientDto.macroscopy,
+      microscopy: updatePatientDto.microscopy,
+      procedure: updatePatientDto.procedure,
+      ihcMarkers: updatePatientDto.ihcMarkers as PathologicalIhcMarker[],
+      recommendations:
+        updatePatientDto.recommendations as PathologicalRecommendation[],
+      patient,
+    });
+
+    return this.pathologicalReportRepository.save(savedPathologicalReport);
   }
 
   remove(id: number) {
