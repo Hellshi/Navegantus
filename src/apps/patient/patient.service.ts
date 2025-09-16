@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePathologicalReportDto } from './dto/update-patient.dto';
 import { CreatePatientPartialDto } from './dto/partial-create-patient.dto';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PatientRepository } from './repositories/patient.repository';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { PathologicalReport } from './entities/pathological-report.entity';
 import { PathologicalIhcMarker } from './entities/pathological-ihc-marker.entity';
 import { PathologicalRecommendation } from './entities/pathological-recommendation.entity';
+import { PathologyReportRepository } from './repositories/pathological-report.repository';
 
 @Injectable()
 export class PatientService {
@@ -15,8 +15,8 @@ export class PatientService {
     private readonly dataSource: DataSource,
     @InjectRepository(PatientRepository)
     private readonly patientRepository: PatientRepository,
-    @InjectRepository(PathologicalReport)
-    private readonly pathologicalReportRepository: Repository<PathologicalReport>,
+    @InjectRepository(PathologyReportRepository)
+    private readonly pathologicalReportRepository: PathologyReportRepository,
   ) {}
   async create(dto: CreatePatientPartialDto) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -73,5 +73,12 @@ export class PatientService {
 
   remove(id: number) {
     return `This action removes a #${id} patient`;
+  }
+
+  async getPathologicalReport(id: string, pagination: PaginationDto) {
+    return this.pathologicalReportRepository.findAllByPatientPaginated({
+      id,
+      pagination,
+    });
   }
 }
